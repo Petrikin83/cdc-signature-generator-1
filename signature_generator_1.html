@@ -1,0 +1,886 @@
+<!-- =====================================================================
+     CDC Email Signature Generator
+     For Tilda T123 (HTML+JS block)
+     Style: CDC brand + Apple-like aesthetics
+     Dual mode: Gmail + iOS Mail
+     ===================================================================== -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  /* ===== Reset & Tokens ===== */
+  .cdc-sg{
+    --orange:#F47920;
+    --orange-dark:#d8650f;
+    --orange-soft:#FFF1E3;
+    --ink:#2A2A2A;
+    --ink-soft:#5C5A53;
+    --ink-muted:#8A8880;
+    --line:#E8E5DC;
+    --line-soft:#F0EDE4;
+    --bg:#F4F2EC;
+    --bg-paper:#FAF9F5;
+    --white:#ffffff;
+
+    --r-sm:10px;
+    --r-md:14px;
+    --r-lg:20px;
+    --r-xl:28px;
+    --r-pill:999px;
+
+    --shadow-sm:0 1px 2px rgba(42,42,42,0.04);
+    --shadow-md:0 4px 16px rgba(42,42,42,0.06);
+    --shadow-lg:0 8px 32px rgba(42,42,42,0.08);
+
+    font-family:'Manrope', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+    color:var(--ink);
+    max-width:1100px;
+    margin:0 auto;
+    padding:0;
+    box-sizing:border-box;
+    background:var(--bg);
+    border-radius:var(--r-xl);
+    overflow:hidden;
+  }
+  .cdc-sg *, .cdc-sg *::before, .cdc-sg *::after{ box-sizing:border-box; }
+  .cdc-sg button{ font-family:inherit; }
+
+  /* ===== HERO (compact: logo left + title right, dark card) ===== */
+  .cdc-hero{
+    background:#2A2A2A;
+    margin:24px 24px 0 24px;
+    border-radius:var(--r-lg);
+    padding:28px 36px;
+    display:flex;
+    align-items:center;
+    gap:32px;
+    position:relative;
+    overflow:hidden;
+  }
+  .cdc-hero-blob{
+    position:absolute;
+    width:280px;height:280px;border-radius:50%;
+    background:radial-gradient(circle, rgba(244,121,32,0.18) 0%, rgba(244,121,32,0) 70%);
+    top:-80px;right:-80px;pointer-events:none;
+  }
+  .cdc-hero-logo{
+    width:170px;
+    flex-shrink:0;
+    position:relative;
+    z-index:1;
+  }
+  .cdc-hero-logo img{ width:100%; height:auto; display:block; }
+  .cdc-hero-text{
+    position:relative;
+    z-index:1;
+    color:#fff;
+    min-width:0;
+  }
+  .cdc-hero-title{
+    font-size:clamp(24px, 3vw, 32px);
+    font-weight:700;
+    line-height:1.05;
+    margin:0;
+    letter-spacing:-0.8px;
+    color:#fff;
+  }
+  .cdc-hero-title .accent{ color:var(--orange); }
+  .cdc-hero-sub{
+    font-size:13px;
+    color:#bbb;
+    margin:6px 0 0 0;
+    line-height:1.45;
+    max-width:540px;
+    font-weight:400;
+  }
+
+  @media (max-width:680px){
+    .cdc-hero{
+      flex-direction:column;
+      align-items:flex-start;
+      gap:18px;
+      padding:24px;
+    }
+    .cdc-hero-logo{ width:140px; }
+  }
+
+  /* ===== BODY ===== */
+  .cdc-body{
+    padding:44px 56px 52px 56px;
+    background:var(--white);
+  }
+  .cdc-grid{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    gap:36px;
+    align-items:start;
+  }
+  @media (max-width:880px){
+    .cdc-hero{ margin:16px 16px 0 16px; padding:24px; }
+    .cdc-body{ padding:32px 24px 36px 24px; }
+    .cdc-grid{ grid-template-columns:1fr; gap:28px; }
+  }
+
+  /* ===== STEP LABELS ===== */
+  .cdc-step{
+    font-size:11px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    color:var(--ink-muted);
+    font-weight:700;
+    margin:0 0 22px 0;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .cdc-step-num{
+    width:24px;height:24px;
+    background:var(--orange);
+    color:#fff;
+    border-radius:50%;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    font-size:12px;
+    font-weight:800;
+    letter-spacing:0;
+  }
+
+  /* ===== FORM ===== */
+  .cdc-form{ display:grid; gap:14px; }
+  .cdc-field{ display:grid; gap:7px; }
+  .cdc-label{
+    font-size:12px;
+    font-weight:600;
+    color:var(--ink);
+    letter-spacing:0.2px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .cdc-label .opt{ font-size:11px; color:var(--ink-muted); font-weight:500; }
+  .cdc-input{
+    width:100%;
+    padding:13px 16px;
+    border:1.5px solid var(--line);
+    border-radius:var(--r-md);
+    background:var(--bg-paper);
+    font-size:14px;
+    font-family:inherit;
+    color:var(--ink);
+    font-weight:500;
+    transition:all .15s ease;
+    -webkit-appearance:none;
+    appearance:none;
+  }
+  .cdc-input::placeholder{ color:#bdbab0; font-weight:400; }
+  .cdc-input:focus{
+    outline:none;
+    border-color:var(--orange);
+    background:var(--white);
+    box-shadow:0 0 0 4px rgba(244,121,32,0.12);
+  }
+  textarea.cdc-input{
+    resize:vertical;
+    min-height:64px;
+    font-family:inherit;
+    line-height:1.45;
+  }
+  .cdc-row{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+
+  /* Select */
+  .cdc-select-wrap{ position:relative; }
+  .cdc-select{ padding-right:42px; cursor:pointer; }
+  .cdc-arrow{
+    position:absolute;right:18px;top:50%;
+    transform:translateY(-50%);
+    color:var(--orange);font-size:9px;font-weight:700;
+    pointer-events:none;
+  }
+
+  /* ===== PREVIEW ===== */
+  .cdc-preview-wrap{ position:sticky; top:24px; }
+
+  /* Mode tabs */
+  .cdc-tabs{
+    display:flex;
+    gap:4px;
+    background:var(--bg-paper);
+    border:1.5px solid var(--line);
+    border-radius:var(--r-pill);
+    padding:4px;
+    margin-bottom:16px;
+  }
+  .cdc-tab{
+    flex:1;
+    padding:9px 14px;
+    font-size:12px;
+    font-weight:600;
+    text-align:center;
+    border-radius:var(--r-pill);
+    cursor:pointer;
+    color:var(--ink-soft);
+    background:transparent;
+    border:none;
+    transition:all .15s;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    font-family:inherit;
+  }
+  .cdc-tab.is-active{
+    background:var(--ink);
+    color:#fff;
+    box-shadow:var(--shadow-sm);
+  }
+  .cdc-tab-icon{ font-size:14px; line-height:1; }
+
+  /* iOS instructions card */
+  .cdc-ios-howto{
+    background:linear-gradient(180deg, var(--orange-soft) 0%, var(--bg-paper) 100%);
+    border:1.5px solid var(--line);
+    border-radius:var(--r-lg);
+    padding:18px 20px;
+    margin-bottom:16px;
+  }
+  .cdc-ios-title{
+    font-size:13px;
+    font-weight:700;
+    color:var(--ink);
+    margin:0 0 4px 0;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .cdc-ios-icon{
+    width:22px;height:22px;
+    background:var(--ink);
+    color:#fff;
+    border-radius:6px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    font-size:13px;
+    font-weight:800;
+  }
+  .cdc-ios-sub{
+    font-size:12px;color:var(--ink-soft);margin:0 0 12px 0;line-height:1.45;
+  }
+  .cdc-ios-steps{
+    list-style:none;
+    counter-reset:cdcios;
+    padding:0;margin:0;
+    display:grid;gap:7px;
+  }
+  .cdc-ios-steps li{
+    counter-increment:cdcios;
+    padding-left:26px;
+    position:relative;
+    font-size:12px;
+    color:var(--ink);
+    line-height:1.5;
+    font-weight:500;
+  }
+  .cdc-ios-steps li::before{
+    content:counter(cdcios);
+    position:absolute;
+    left:0;top:0;
+    width:18px;height:18px;
+    background:var(--orange);
+    color:#fff;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:10px;font-weight:800;
+  }
+  .cdc-ios-steps b{ color:var(--orange); font-weight:700; }
+  .cdc-ios-warn{
+    margin-top:12px;
+    padding:10px 12px;
+    background:rgba(255,255,255,0.6);
+    border-left:3px solid var(--orange);
+    border-radius:8px;
+    font-size:11px;color:var(--ink-soft);line-height:1.5;
+  }
+  .cdc-ios-warn b{ color:var(--ink); font-weight:700; }
+
+  /* Preview card */
+  .cdc-preview-card{
+    background:var(--bg-paper);
+    border:1.5px solid var(--line);
+    border-radius:var(--r-lg);
+    padding:24px;
+    position:relative;
+    overflow:hidden;
+  }
+  .cdc-preview-tag{
+    font-size:10px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    color:var(--orange);
+    font-weight:700;
+    margin:0 0 14px 0;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .cdc-preview-dot{
+    width:6px;height:6px;background:var(--orange);
+    border-radius:50%;display:inline-block;
+  }
+  .cdc-preview-paper{
+    background:#fff;
+    border-radius:var(--r-md);
+    padding:20px 22px;
+    color:var(--ink);
+    border:1px solid var(--line-soft);
+    min-height:200px;
+    overflow-x:auto;
+  }
+
+  /* Buttons */
+  .cdc-actions{
+    display:block;
+    margin-top:16px;
+  }
+  .cdc-actions .cdc-btn{ width:100%; }
+  .cdc-btn{
+    padding:14px 22px;
+    border-radius:var(--r-pill);
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
+    border:none;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    letter-spacing:0.3px;
+    transition:all .15s ease;
+    white-space:nowrap;
+  }
+  .cdc-btn:active{ transform:translateY(1px); }
+  .cdc-btn-primary{ background:var(--orange); color:#fff; }
+  .cdc-btn-primary:hover{ background:var(--orange-dark); transform:translateY(-1px); box-shadow:var(--shadow-md); }
+  .cdc-btn-secondary{
+    background:var(--white);
+    color:var(--ink);
+    border:1.5px solid var(--line);
+  }
+  .cdc-btn-secondary:hover{ border-color:var(--orange); color:var(--orange); }
+
+  .cdc-hint{
+    font-size:12px;color:var(--ink-muted);
+    margin:14px 0 0 0;text-align:center;line-height:1.5;
+  }
+  .cdc-hint b{ color:var(--orange); font-weight:700; }
+
+  /* Toast */
+  .cdc-toast{
+    position:fixed;
+    bottom:24px;
+    left:50%;
+    transform:translateX(-50%) translateY(120px);
+    background:var(--ink);
+    color:#fff;
+    padding:13px 24px;
+    border-radius:var(--r-pill);
+    font-size:13px;
+    font-weight:600;
+    box-shadow:0 12px 32px rgba(0,0,0,0.25);
+    transition:transform .3s ease;
+    z-index:9999;
+    pointer-events:none;
+    font-family:'Manrope', system-ui, sans-serif;
+  }
+  .cdc-toast.show{ transform:translateX(-50%) translateY(0); }
+</style>
+
+<div class="cdc-sg" id="cdc-signature-generator">
+
+  <!-- ===== Compact Hero: logo left + title right ===== -->
+  <div class="cdc-hero">
+    <div class="cdc-hero-blob"></div>
+    <div class="cdc-hero-logo">
+      <img src="https://static.tildacdn.com/tild6235-6631-4530-a164-313366636138/Logo_CDC_new.png" alt="CDC">
+    </div>
+    <div class="cdc-hero-text">
+      <h1 class="cdc-hero-title">Email Signature <span class="accent">Generator</span></h1>
+      <p class="cdc-hero-sub">Build your unified corporate signature in seconds. Choose your division, fill in your details, and copy the ready signature into Gmail or Apple Mail on iPhone.</p>
+    </div>
+  </div>
+
+  <!-- ===== Body ===== -->
+  <div class="cdc-body">
+    <div class="cdc-grid">
+
+      <!-- LEFT: FORM -->
+      <div>
+        <p class="cdc-step"><span class="cdc-step-num">1</span> Your details</p>
+
+        <form id="cdc-form" class="cdc-form" autocomplete="off">
+
+          <div class="cdc-row">
+            <div class="cdc-field">
+              <label class="cdc-label" for="cdc-firstName">First name</label>
+              <input id="cdc-firstName" class="cdc-input" required placeholder="John" value="John">
+            </div>
+            <div class="cdc-field">
+              <label class="cdc-label" for="cdc-lastName">Last name</label>
+              <input id="cdc-lastName" class="cdc-input" required placeholder="Doe" value="Doe">
+            </div>
+          </div>
+
+          <div class="cdc-field">
+            <label class="cdc-label" for="cdc-position">Position</label>
+            <input id="cdc-position" class="cdc-input" required placeholder="e.g. Engineer" value="Engineer">
+          </div>
+
+          <div class="cdc-field">
+            <label class="cdc-label" for="cdc-division">Division (logo)</label>
+            <div class="cdc-select-wrap">
+              <select id="cdc-division" class="cdc-input cdc-select">
+                <option value="cdc_new" selected>CDC New</option>
+                <option value="cdc_cableway">CDC Cableway Development Company</option>
+                <option value="cdc_srl">C.D.C. Chain drive Crane SRL</option>
+                <option value="holding">CDC HOLDING</option>
+                <option value="ab_uae">AirBridge UAE</option>
+                <option value="ab_ksa">AirBridge KSA</option>
+              </select>
+              <span class="cdc-arrow">▼</span>
+            </div>
+          </div>
+
+          <div class="cdc-field">
+            <label class="cdc-label" for="cdc-addressMode">Office address</label>
+            <div class="cdc-select-wrap">
+              <select id="cdc-addressMode" class="cdc-input cdc-select">
+                <option value="none" selected>Don't show address</option>
+                <option value="auto">Use office address of selected division</option>
+                <option value="custom">Custom address...</option>
+              </select>
+              <span class="cdc-arrow">▼</span>
+            </div>
+          </div>
+
+          <div class="cdc-field" id="cdc-customAddrField" style="display:none;">
+            <label class="cdc-label" for="cdc-customAddr">Your address <span class="opt">use line breaks for multi-line</span></label>
+            <textarea id="cdc-customAddr" class="cdc-input" rows="3" placeholder="e.g. Project Site Office&#10;Location · Country"></textarea>
+          </div>
+
+          <div class="cdc-row">
+            <div class="cdc-field">
+              <label class="cdc-label" for="cdc-mobile1">Mobile</label>
+              <input id="cdc-mobile1" class="cdc-input" required placeholder="+971 55 123 4567" value="+971 55 123 4567">
+            </div>
+            <div class="cdc-field">
+              <label class="cdc-label" for="cdc-mobile2">Mobile 2 <span class="opt">optional</span></label>
+              <input id="cdc-mobile2" class="cdc-input" placeholder="—">
+            </div>
+          </div>
+
+          <div class="cdc-row">
+            <div class="cdc-field">
+              <label class="cdc-label" for="cdc-email1">Email</label>
+              <input id="cdc-email1" class="cdc-input" type="email" required placeholder="name@cdc.company" value="name@cdc.company">
+            </div>
+            <div class="cdc-field">
+              <label class="cdc-label" for="cdc-email2">Email 2 <span class="opt">optional</span></label>
+              <input id="cdc-email2" class="cdc-input" type="email" placeholder="—">
+            </div>
+          </div>
+
+          <div class="cdc-row">
+            <div class="cdc-field">
+              <label class="cdc-label" for="cdc-web1">Website 1</label>
+              <input id="cdc-web1" class="cdc-input" placeholder="domain.tld" value="cdc.company">
+            </div>
+            <div class="cdc-field">
+              <label class="cdc-label" for="cdc-web2">Website 2 <span class="opt">optional</span></label>
+              <input id="cdc-web2" class="cdc-input" placeholder="—">
+            </div>
+          </div>
+
+        </form>
+      </div>
+
+      <!-- RIGHT: PREVIEW -->
+      <div class="cdc-preview-wrap">
+        <p class="cdc-step"><span class="cdc-step-num">2</span> Live preview</p>
+
+        <!-- Mode tabs -->
+        <div class="cdc-tabs" role="tablist">
+          <button type="button" class="cdc-tab is-active" data-mode="desktop" role="tab">
+            <span class="cdc-tab-icon">✉️</span> Gmail
+          </button>
+          <button type="button" class="cdc-tab" data-mode="ios" role="tab">
+            <span class="cdc-tab-icon">📱</span> iOS Mail
+          </button>
+        </div>
+
+        <!-- iOS instructions (hidden by default) -->
+        <div class="cdc-ios-howto" id="cdc-ios-howto" style="display:none;">
+          <p class="cdc-ios-title"><span class="cdc-ios-icon"></span> How to add on iPhone / iPad</p>
+          <p class="cdc-ios-sub">iOS Mail strips most formatting on paste. Follow these steps to keep your signature looking right:</p>
+          <ol class="cdc-ios-steps">
+            <li>Click <b>Copy for iOS</b> below, then send the signature to yourself by email from your computer.</li>
+            <li>Open that email on your iPhone, tap and hold the signature, choose <b>Select All</b> → <b>Copy</b>.</li>
+            <li>Open <b>Settings → Mail → Signature</b>, delete the existing text and paste the copied signature.</li>
+            <li><b>Shake your phone</b> until the <b>"Undo Change Attributes"</b> popup appears, then tap <b>Undo</b>.</li>
+            <li>Tap the back arrow to save. Send a test email to confirm formatting.</li>
+          </ol>
+          <div class="cdc-ios-warn">
+            <b>iPad without shake?</b> Enable it in <b>Settings → Accessibility → Touch → Shake to Undo</b>. Logo image must stay reachable on the public CDN — don't edit the signature after pasting.
+          </div>
+        </div>
+
+        <!-- Preview card -->
+        <div class="cdc-preview-card">
+          <p class="cdc-preview-tag">
+            <span class="cdc-preview-dot"></span>
+            <span id="cdc-preview-tag-text">Your signature</span>
+          </p>
+          <div class="cdc-preview-paper" id="cdc-preview"></div>
+
+          <div class="cdc-actions">
+            <button type="button" class="cdc-btn cdc-btn-primary" id="cdc-btn-copy">
+              <span id="cdc-btn-copy-text">Copy signature</span> →
+            </button>
+          </div>
+          <p class="cdc-hint" id="cdc-hint-text">Paste into <b>Gmail</b> → Settings → Signature</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="cdc-toast" id="cdc-toast">Copied to clipboard ✓</div>
+</div>
+
+<script>
+(function(){
+  // =================== DATA ===================
+  const LOGOS = {
+    cdc_new: {
+      label:'CDC',
+      url:'https://static.tildacdn.com/tild6235-6631-4530-a164-313366636138/Logo_CDC_new.png',
+      width: 200
+    },
+    cdc_cableway: {
+      label:'CDC Cableway Development Company',
+      url:'https://static.tildacdn.com/tild3133-6333-4731-b766-666631386139/cdc-logo-orange-full.png',
+      width: 200
+    },
+    cdc_srl: {
+      label:'C.D.C. Chain drive Crane SRL',
+      url:'https://static.tildacdn.one/tild6464-3030-4365-a337-346231326430/CDC_innovative_ropew.png',
+      width: 100
+    },
+    holding: {
+      label:'CDC HOLDING',
+      url:'https://static.tildacdn.one/tild6433-6237-4233-b665-636139353139/CDC_Holding.png',
+      width: 100
+    },
+    ab_uae: {
+      label:'AirBridge UAE',
+      url:'https://static.tildacdn.one/tild6562-6534-4635-b533-356334393435/AirBridge_UAE.png',
+      width: 100
+    },
+    ab_ksa: {
+      label:'AirBridge KSA',
+      url:'https://static.tildacdn.one/tild3633-6636-4339-a563-303237633430/AirBridge_KSA.png',
+      width: 100
+    }
+  };
+
+  const ORG_BY_DIVISION = {
+    cdc_new: 'CDC',
+    holding: 'CDC HOLDING LTD',
+    cdc_cableway: 'CDC Cableway Development Company',
+    cdc_srl: 'C.D.C. Chain drive Crane SRL',
+    ab_uae:  'AirBidge FZ-LLC',
+    ab_ksa:  'AirBidge LLC'
+  };
+
+  const ADDR_BY_DIVISION = {
+    cdc_new:
+`2462ResCowork01 · Al Sila Tower
+Abu Dhabi · UAE`,
+    holding:
+`2462ResCowork01 · Al Sila Tower
+Abu Dhabi · UAE`,
+    cdc_cableway:
+`Handwerkerzone 8 · 39040 Aldein
+Bolzano · Italy`,
+    cdc_srl:
+`Handwerkerzone 8 · 39040 Aldein
+Bolzano · Italy`,
+    ab_uae:
+`T112-5-2 · Rakez Amenity Center 
+Al Hamra Industrial Zone-FZ 
+Ras Al Khaimah · UAE`,
+    ab_ksa:
+`7065 King Fahd Road · Unit NO.2172 
+Tabuk · Saudi Arabia`
+  };
+
+  const DISCLAIMER_TEMPLATE = (org) => (
+`This email and any files transmitted with it may contain information that is proprietary and confidential to ${org} and its affiliates and is intended solely for the use of the individual or entity to whom it is addressed. If you have received this email in error, please return it to the sender by replying to it, then permanently delete it from your system. Any disclosure, use, copying, or distribution of the information contained in this email by anyone other than the named addressee is strictly prohibited. Any views or opinions expressed in this email are solely those of the author and do not necessarily represent those of ${org} and its affiliates. No employee, contractor, or agent is authorized to conclude any binding agreement on behalf of ${org} and its affiliates by email.`
+  );
+
+  // =================== STATE ===================
+  let currentMode = 'desktop'; // 'desktop' | 'ios'
+
+  // =================== HELPERS ===================
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const escBr = (s) => esc(s).replace(/\r?\n/g,'<br>');
+  const telHref = (s) => {
+    const clean = String(s||'').replace(/[^+0-9]/g,'');
+    return clean ? 'tel:'+clean : '';
+  };
+
+  function valuesFromForm(){
+    const division = $('cdc-division').value;
+    const addressMode = $('cdc-addressMode').value; // 'none' | 'auto' | 'custom'
+    const customAddr = $('cdc-customAddr').value;
+    const logo = LOGOS[division];
+
+    let address = '';
+    if (addressMode === 'auto') {
+      address = ADDR_BY_DIVISION[division] || '';
+    } else if (addressMode === 'custom') {
+      address = customAddr.trim();
+    }
+
+    return {
+      fullName: ($('cdc-firstName').value.trim() + ' ' + $('cdc-lastName').value.trim()).trim(),
+      position: $('cdc-position').value.trim(),
+      division,
+      org: ORG_BY_DIVISION[division] || '',
+      logoUrl: logo ? logo.url : '',
+      logoLabel: logo ? logo.label : '',
+      logoWidth: logo ? logo.width : 100,
+      mobile1: $('cdc-mobile1').value.trim(),
+      mobile2: $('cdc-mobile2').value.trim(),
+      email1:  $('cdc-email1').value.trim(),
+      email2:  $('cdc-email2').value.trim(),
+      web1:    $('cdc-web1').value.trim(),
+      web2:    $('cdc-web2').value.trim(),
+      address,
+    };
+  }
+
+  // =================== GMAIL SIGNATURE (table-based, Gmail-friendly) ===================
+  function buildDesktopHtml(v){
+    const tableWidth = 520;
+    const cellBase = 'font-size:12px; line-height:1.35;';
+    const labelW = 60;
+    const rows = [];
+
+    if (v.address){
+      rows.push(`<tr><td colspan="2" style="${cellBase}; padding:8px 0 0 0;">${escBr(v.address)}</td></tr>`);
+    }
+    rows.push(`<tr>
+      <td style="${cellBase}; width:${labelW}px; padding:6px 0 0 0;"><strong>Mobile:</strong></td>
+      <td style="${cellBase}; padding:6px 0 0 0;">
+        <a href="${telHref(v.mobile1)}" style="color:#0b61ff; text-decoration:none;">${esc(v.mobile1)}</a>
+      </td></tr>`);
+    if (v.mobile2){
+      rows.push(`<tr>
+        <td style="${cellBase}; width:${labelW}px; padding:0;"></td>
+        <td style="${cellBase}; padding:0;">
+          <a href="${telHref(v.mobile2)}" style="color:#0b61ff; text-decoration:none;">${esc(v.mobile2)}</a>
+        </td></tr>`);
+    }
+    const emailParts = [
+      v.email1 ? `<a href="mailto:${esc(v.email1)}" style="color:#0b61ff; text-decoration:none;">${esc(v.email1)}</a>` : '',
+      v.email2 ? `<a href="mailto:${esc(v.email2)}" style="color:#0b61ff; text-decoration:none;">${esc(v.email2)}</a>` : ''
+    ].filter(Boolean);
+    rows.push(`<tr>
+      <td style="${cellBase}; width:${labelW}px; padding:2px 6px 0 0;"><strong>Email:</strong></td>
+      <td style="${cellBase}; padding:2px 0 0 0;">${emailParts.join('<span style="margin:0 6px; color:#999;">|</span>')}</td>
+    </tr>`);
+
+    if (v.web1 || v.web2){
+      const webParts = [
+        v.web1 ? `<a href="https://${esc(v.web1)}" style="color:#0b61ff; text-decoration:none;">${esc(v.web1)}</a>` : '',
+        v.web2 ? `<a href="https://${esc(v.web2)}" style="color:#0b61ff; text-decoration:none;">${esc(v.web2)}</a>` : ''
+      ].filter(Boolean);
+      rows.push(`<tr>
+        <td style="${cellBase}; width:${labelW}px; padding:2px 6px 0 0;"><strong>Web:</strong></td>
+        <td style="${cellBase}; padding:2px 0 0 0;">${webParts.join('<span style="margin:0 6px; color:#999;">|</span>')}</td>
+      </tr>`);
+    }
+
+    const contactHTML = `<table cellpadding="0" cellspacing="0" width="${tableWidth}" style="width:${tableWidth}px; border-collapse:collapse;">${rows.join('')}</table>`;
+    const disclaimerText = DISCLAIMER_TEMPLATE(v.org);
+
+    return `
+<table cellpadding="0" cellspacing="0" width="${tableWidth}" style="width:${tableWidth}px; table-layout:fixed; border-collapse:collapse; font-family:Arial, sans-serif; font-size:12px; line-height:1.35; color:#111;">
+  <tr><td style="${cellBase}; padding:0 0 2px 0; font-size:14px; font-weight:bold;">${esc(v.fullName)}</td></tr>
+  <tr><td style="${cellBase}; padding:0 0 12px 0; font-size:13px; font-weight:600;">${esc(v.position)}</td></tr>
+  <tr><td style="${cellBase}; padding:0;">
+    <a href="${v.logoUrl}" target="_blank" rel="noopener">
+      <img src="${v.logoUrl}" alt="${esc(v.logoLabel)}" width="${v.logoWidth}"
+           style="width:${v.logoWidth}px; height:auto; display:block; border:0; outline:none;">
+    </a>
+  </td></tr>
+  <tr><td style="${cellBase}; padding:0;">${contactHTML}</td></tr>
+  <tr><td style="${cellBase}; padding-top:10px; color:#666;">${esc(disclaimerText)}</td></tr>
+</table>`.trim();
+  }
+
+  // =================== iOS SIGNATURE ===================
+  // iOS strips most CSS on paste. Strategy: simple table with 2 columns (label / value)
+  // for proper left-alignment, public CDN image, system font stack, absolute font sizes.
+  // The "shake → Undo Change Attributes" trick restores formatting on iOS.
+  function buildIosHtml(v){
+    const W = 320;
+    const labelW = 56;
+    const baseFont = 'font-family:-apple-system,Helvetica,Arial,sans-serif;';
+    const cellBase = `${baseFont} font-size:13px; line-height:1.5; color:#222; vertical-align:top;`;
+    const labelStyle = `${cellBase} width:${labelW}px; padding:2px 4px 2px 0; font-weight:bold;`;
+    const valueStyle = `${cellBase} padding:2px 0;`;
+
+    const rows = [];
+
+    if (v.address){
+      rows.push(`<tr><td colspan="2" style="${cellBase} padding:0 0 8px 0; color:#444;">${escBr(v.address)}</td></tr>`);
+    }
+
+    rows.push(`<tr>
+      <td style="${labelStyle}">Mobile:</td>
+      <td style="${valueStyle}"><a href="${telHref(v.mobile1)}" style="color:#0b61ff; text-decoration:none;">${esc(v.mobile1)}</a></td>
+    </tr>`);
+    if (v.mobile2){
+      rows.push(`<tr>
+        <td style="${labelStyle}"></td>
+        <td style="${valueStyle}"><a href="${telHref(v.mobile2)}" style="color:#0b61ff; text-decoration:none;">${esc(v.mobile2)}</a></td>
+      </tr>`);
+    }
+
+    const emailParts = [
+      v.email1 ? `<a href="mailto:${esc(v.email1)}" style="color:#0b61ff; text-decoration:none;">${esc(v.email1)}</a>` : '',
+      v.email2 ? `<a href="mailto:${esc(v.email2)}" style="color:#0b61ff; text-decoration:none;">${esc(v.email2)}</a>` : ''
+    ].filter(Boolean).join('<span style="color:#999; margin:0 6px;">|</span>');
+    rows.push(`<tr>
+      <td style="${labelStyle}">Email:</td>
+      <td style="${valueStyle}">${emailParts}</td>
+    </tr>`);
+
+    if (v.web1 || v.web2){
+      const webParts = [
+        v.web1 ? `<a href="https://${esc(v.web1)}" style="color:#0b61ff; text-decoration:none;">${esc(v.web1)}</a>` : '',
+        v.web2 ? `<a href="https://${esc(v.web2)}" style="color:#0b61ff; text-decoration:none;">${esc(v.web2)}</a>` : ''
+      ].filter(Boolean).join('<span style="color:#999; margin:0 6px;">|</span>');
+      rows.push(`<tr>
+        <td style="${labelStyle}">Web:</td>
+        <td style="${valueStyle}">${webParts}</td>
+      </tr>`);
+    }
+
+    const disclaimerText = DISCLAIMER_TEMPLATE(v.org);
+
+    return `
+<table cellpadding="0" cellspacing="0" border="0" width="${W}" style="width:${W}px; border-collapse:collapse; ${baseFont}">
+  <tr><td style="${baseFont} font-size:15px; font-weight:bold; color:#111; padding:0 0 1px 0;">${esc(v.fullName)}</td></tr>
+  <tr><td style="${baseFont} font-size:14px; font-weight:600; color:#111; padding:0 0 10px 0;">${esc(v.position)}</td></tr>
+  <tr><td style="padding:0 0 10px 0;">
+    <a href="${v.logoUrl}" style="text-decoration:none; border:0;">
+      <img src="${v.logoUrl}" alt="${esc(v.logoLabel)}" width="${v.logoWidth}" style="width:${v.logoWidth}px; height:auto; display:block; border:0;">
+    </a>
+  </td></tr>
+  <tr><td style="padding:0;">
+    <table cellpadding="0" cellspacing="0" border="0" width="${W}" style="width:${W}px; border-collapse:collapse;">
+      ${rows.join('\n      ')}
+    </table>
+  </td></tr>
+  <tr><td style="${baseFont} font-size:10px; color:#777; line-height:1.45; padding:10px 0 0 0; border-top:1px solid #eee;">${esc(disclaimerText)}</td></tr>
+</table>`.trim();
+  }
+
+  // =================== RENDER ===================
+  function render(){
+    const v = valuesFromForm();
+    const html = currentMode === 'ios' ? buildIosHtml(v) : buildDesktopHtml(v);
+    $('cdc-preview').innerHTML = html;
+  }
+
+  // =================== MODE TABS ===================
+  function setMode(mode){
+    currentMode = mode;
+    document.querySelectorAll('.cdc-tab').forEach(t => {
+      t.classList.toggle('is-active', t.dataset.mode === mode);
+    });
+    const isIos = (mode === 'ios');
+    $('cdc-ios-howto').style.display = isIos ? '' : 'none';
+    $('cdc-preview-tag-text').textContent = isIos ? 'iOS Mail signature' : 'Your signature';
+    $('cdc-btn-copy-text').textContent = isIos ? 'Copy for iOS' : 'Copy signature';
+    $('cdc-hint-text').innerHTML = isIos
+      ? 'Email this signature to yourself, then paste into <b>iOS Mail</b> as instructed above'
+      : 'Paste into <b>Gmail</b> → Settings → Signature';
+    render();
+  }
+
+  // =================== TOAST ===================
+  function showToast(text){
+    const t = $('cdc-toast');
+    t.textContent = text;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2000);
+  }
+
+  // =================== COPY HANDLERS ===================
+  async function copyRichSignature(){
+    const html = $('cdc-preview').innerHTML;
+    try {
+      if (navigator.clipboard && window.ClipboardItem){
+        const blobHtml = new Blob([html], { type:'text/html' });
+        const tmp = document.createElement('div');
+        tmp.innerHTML = html;
+        const blobText = new Blob([tmp.innerText], { type:'text/plain' });
+        await navigator.clipboard.write([
+          new ClipboardItem({ 'text/html': blobHtml, 'text/plain': blobText })
+        ]);
+        showToast(currentMode === 'ios' ? 'iOS signature copied ✓' : 'Signature copied ✓');
+        return;
+      }
+      throw new Error('ClipboardItem unsupported');
+    } catch(e){
+      try {
+        const range = document.createRange();
+        range.selectNodeContents($('cdc-preview'));
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+        document.execCommand('copy');
+        sel.removeAllRanges();
+        showToast('Signature copied ✓');
+      } catch(err){
+        showToast('Copy failed — please select manually');
+      }
+    }
+  }
+
+  // =================== ADDRESS MODE FIELD VISIBILITY ===================
+  function syncAddressField(){
+    const mode = $('cdc-addressMode').value;
+    $('cdc-customAddrField').style.display = (mode === 'custom') ? '' : 'none';
+  }
+
+  // =================== INIT ===================
+  syncAddressField();
+  setMode('desktop'); // initial render
+
+  $('cdc-form').addEventListener('input', render);
+  $('cdc-division').addEventListener('change', render);
+  $('cdc-addressMode').addEventListener('change', () => { syncAddressField(); render(); });
+  document.querySelectorAll('.cdc-tab').forEach(tab => {
+    tab.addEventListener('click', () => setMode(tab.dataset.mode));
+  });
+  $('cdc-btn-copy').addEventListener('click', copyRichSignature);
+})();
+</script>
